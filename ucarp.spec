@@ -1,7 +1,7 @@
 Summary:	UCARP is a portable implementation of the CARP protocol
 Name:		ucarp
 Version:	1.2
-Release:	%mkrel 8
+Release:	%mkrel 9
 License:	BSD
 Group:		Networking/Other
 URL:		http://download.pureftpd.org/pub/ucarp/
