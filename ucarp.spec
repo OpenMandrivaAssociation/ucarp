@@ -12,6 +12,7 @@ Patch0:		ucarp-1.2-ip_addr_len.patch
 BuildRequires:	libpcap-devel
 BuildRequires:	docbook-utils
 BuildRequires:	docbook-dtd41-sgml
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post):  rpm-helper
 Requires(preun): rpm-helper
 
