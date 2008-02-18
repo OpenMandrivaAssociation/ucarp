@@ -1,4 +1,4 @@
-Summary:	UCARP is a portable implementation of the CARP protocol
+Summary:	Portable implementation of the CARP protocol
 Name:		ucarp
 Version:	1.4
 Release:	%mkrel 1
