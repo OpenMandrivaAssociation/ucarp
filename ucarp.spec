@@ -1,7 +1,7 @@
 Summary:	Portable implementation of the CARP protocol
 Name:		ucarp
 Version:	1.5
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	BSD
 Group:		Networking/Other
 URL:		http://download.pureftpd.org/pub/ucarp/
