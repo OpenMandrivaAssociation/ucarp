@@ -1,19 +1,17 @@
 Summary:	Portable implementation of the CARP protocol
 Name:		ucarp
-Version:	1.5
-Release:	%mkrel 3
+Version:	1.5.1
+Release:	%mkrel 1
 License:	BSD
 Group:		Networking/Other
 URL:		http://download.pureftpd.org/pub/ucarp/
 Source0:	http://download.pureftpd.org/pub/ucarp/%{name}-%{version}.tar.gz
 Source1:	ucarp.8.sgml.bz2
 Source2:	ucarp.init
-Patch0:		ucarp-no_bundled_libtool.diff
 BuildRequires:	docbook-dtd41-sgml
 BuildRequires:	docbook-utils
 BuildRequires:	gettext
 BuildRequires:	libpcap-devel
-BuildRequires:	libtool
 Requires(post):  rpm-helper
 Requires(preun): rpm-helper
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -31,14 +29,10 @@ no need for any dedicated extra network link between redundant hosts.
 %prep
 
 %setup -q
-%patch0 -p0 -b .no_bundled_libtool
 
 bzcat %{SOURCE1} > ucarp.8.sgml
 
 %build
-rm -f configure
-libtoolize --copy --force; aclocal -I m4; autoconf
-
 %configure2_5x
 
 %make
