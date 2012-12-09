@@ -1,0 +1,105 @@
+#!/bin/sh
+
+# chkconfig: 345 91 09
+# description: Starts and stops the common address redundancy protocol daemon
+
+#
+### BEGIN INIT INFO
+# Provides: ucarp
+# Required-Start: $network
+# Required-Stop: $network
+# Should-Start: ct_sync
+# Should-Stop: ct_sync
+# Default-Start: 3 4 5
+# Short-Description: Connection tracking state replication
+# Description: Connection tracking state replication service
+### END INIT INFO
+
+# Source function library.
+. /etc/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ ${NETWORKING} = "no" ] && exit 0
+
+NAME=ucarp
+UCARP_D=/etc/ucarp.d
+
+function is_valid {
+    ! is_ignored_file $1 && [ -n "$INTERFACE" -a -n "$SRCIP" -a -n "$VIRTIP" -a -n "$VHID" -a -n "$PASSWORD" ]
+}
+
+function start {
+    local INTERFACE SRCIP VIRTIP VHID PASSWORD TAKEOVER UPSCRIPT DOWNSCRIPT OPTIONS
+    source $1
+    if is_valid $1; then
+	OPTIONS="-B -i $INTERFACE -s $SRCIP -a $VIRTIP -v $VHID -p $PASSWORD"
+	if [ -n "$UPSCRIPT" ]; then
+	    OPTIONS="$OPTIONS -u $UPSCRIPT"
+	fi
+	if [ -n "$DOWNSCRIPT" ]; then
+	    OPTIONS="$OPTIONS -d $DOWNSCRIPT"
+	fi
+	if [ "$TAKEOVER" = yes ]; then
+	    OPTIONS="$OPTIONS -P"
+	fi
+	gprintf "Starting %s on %s interface: " $NAME $INTERFACE
+	daemon --pidfile /var/run/$NAME-$INTERFACE.pid $NAME $OPTIONS
+	RETVAL=$?
+	echo
+    else
+	RETVAL=1
+    fi
+}
+
+function stop {
+    local INTERFACE SRCIP VIRTIP VHID PASSWORD TAKEOVER UPSCRIPT DOWNSCRIPT OPTIONS
+    source $1
+    if is_valid $1; then
+	gprintf "Shutting down %s on interface %s: " $NAME $INTERFACE
+	PID=/var/run/$NAME-$INTERFACE.pid
+	killproc -p $PID $NAME
+	RETVAL=$?
+	echo
+    else
+	RETVAL=1
+    fi
+}
+
+case "$1" in
+  start)
+	RETVAL=0
+	for f in $UCARP_D/*; do
+	    [ -f $f ] || continue;
+	    start $f
+	done
+        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$NAME
+        ;;
+  stop)
+	RETVAL=0
+	for f in $UCARP_D/*; do
+	    [ -f $f ] || continue;
+	    stop $f
+        done
+        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$NAME
+        ;;
+  status)
+        status $NAME
+        RETVAL=$?
+        ;;
+  restart|reload)
+        $0 stop
+        $0 start
+        ;;
+  condrestart)
+        [ -f /var/lock/subsys/$NAME ] && restart || :
+        ;;
+  *)
+        gprintf "Usage: %s {start|stop|status|restart|condrestart}\n" "$0"
+        RETVAL=1
+        ;;
+esac
+
+exit $RETVAL
