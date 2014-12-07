@@ -1,7 +1,7 @@
 Summary:	Common Address Redundancy Protocol (CARP) for Unix
 Name:		ucarp
 Version:	1.5.2
-Release:	12
+Release:	13
 # See the COPYING file which details everything
 License:	MIT and BSD
 Group:		System/Servers
