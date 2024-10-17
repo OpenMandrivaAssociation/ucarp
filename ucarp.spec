@@ -5,7 +5,7 @@ Release:	15
 # See the COPYING file which details everything
 License:	MIT and BSD
 Group:		System/Servers
-URL:		http://www.ucarp.org/
+URL:		https://www.ucarp.org/
 Source0:	http://download.pureftpd.org/pub/ucarp/ucarp-%{version}.tar.bz2
 Source1:	ucarp@.service
 Source2:	vip-001.conf.example
